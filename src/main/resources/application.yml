@@ -1,0 +1,33 @@
+spring:
+  profiles:
+    active: online
+#配置数据源
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true
+    username: root
+    password:
+    driverClassName: com.mysql.jdbc.Driver
+    max-wait: 10000
+    max-active: 50
+    test-on-borrow: false
+#配置持久层框架
+#  jpa:
+#    database: MYSQL
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#      dialect: org.hibernate.dialect.MySQL5Dialect
+#配置redis信息
+  redis:
+    database: 0
+    host: localhost
+    password:
+    port: 6379
+    pool:
+      max-idle: 8
+      min-idle: 0
+      max-active: 10
+      max-wait: -1
+server:
+  sessionTimeout: 30
+  port: 8080

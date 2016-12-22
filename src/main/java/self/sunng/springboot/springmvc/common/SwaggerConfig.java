@@ -1,50 +1,36 @@
 package self.sunng.springboot.springmvc.common;
 
-import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
-import com.mangofactory.swagger.models.dto.ApiInfo;
-import com.mangofactory.swagger.plugin.EnableSwagger;
-import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Created by sunxiaodong on 16/8/31.
  */
-@EnableSwagger
+@Configuration
+@EnableSwagger2
 public class SwaggerConfig {
-    private SpringSwaggerConfig springSwaggerConfig;
 
-    /**
-     * Required to autowire SpringSwaggerConfig
-     */
-    @Autowired
-    public void setSpringSwaggerConfig(SpringSwaggerConfig springSwaggerConfig)
-    {
-        this.springSwaggerConfig = springSwaggerConfig;
-    }
-
-    /**
-     * Every SwaggerSpringMvcPlugin bean is picked up by the swagger-mvc
-     * framework - allowing for multiple swagger groups i.e. same code base
-     * multiple swagger resource listings.
-     */
     @Bean
-    public SwaggerSpringMvcPlugin customImplementation()
-    {
-        return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
-                .apiInfo(apiInfo())
-                .includePatterns(".*?");
+    public Docket createRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+            .apiInfo(apiInfo())
+            .select()
+            .apis(RequestHandlerSelectors.basePackage("self.sunng.springboot.springmvc"))
+            .paths(PathSelectors.any())
+            .build();
     }
 
-    private ApiInfo apiInfo()
-    {
-        ApiInfo apiInfo = new ApiInfo(
-                "spring mvc",
-                "this is a spring mvc demo",
-                "My Apps API terms of service",
-                "sunxiaodong@yingu.com",
-                "private",
-                "http://www.yunqiandai.com");
-        return apiInfo;
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+            .title("springboot-springmvc")
+            .version("1.0")
+            .build();
     }
 }

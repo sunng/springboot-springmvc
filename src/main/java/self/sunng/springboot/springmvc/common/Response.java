@@ -1,7 +1,7 @@
 package self.sunng.springboot.springmvc.common;
 
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import self.sunng.springboot.springmvc.common.util.JsonUtil;
 
 /**

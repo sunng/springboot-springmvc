@@ -13,14 +13,15 @@ import java.io.PrintWriter;
  */
 public class ExceptionHandler implements HandlerExceptionResolver {
     private static final String ERROR_RESP = JsonUtil.obj2Json(Response.SYSTEM_ERROR);
+
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
+        // TODO: response content depends on Exception type
         try {
             PrintWriter writer = httpServletResponse.getWriter();
             writer.write(ERROR_RESP);
             writer.flush();
         } catch (Exception ex) {
-
         }
 
         return new ModelAndView();

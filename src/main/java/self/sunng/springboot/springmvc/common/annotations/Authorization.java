@@ -1,4 +1,4 @@
-package self.sunng.springboot.springmvc.common.annotation;
+package self.sunng.springboot.springmvc.common.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

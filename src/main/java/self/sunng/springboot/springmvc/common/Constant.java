@@ -7,7 +7,6 @@ public class Constant {
 
     public static final String TOKEN_KEY = "token_key";
 
-
     //-------------------------------------------------------------------------------------
     public static final char CHAR_TAB = '\t';
     public static final char CHAR_enter = '\n';

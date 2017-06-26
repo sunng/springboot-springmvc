@@ -3,12 +3,14 @@ package self.sunng.springboot.springmvc.ent;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.util.Date;
 
 /**
  * Created by sunxiaodong on 16/7/27.
  */
+@Data
 @ApiModel(value = "用户信息", description="用户信息")
 public class User {
 
@@ -20,28 +22,4 @@ public class User {
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 }

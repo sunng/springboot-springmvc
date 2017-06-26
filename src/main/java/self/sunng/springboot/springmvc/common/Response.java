@@ -11,7 +11,8 @@ import self.sunng.springboot.springmvc.common.util.JsonUtil;
 public class Response {
 
     public static final Response OK = new Response(null);
-    public static final Response SYSTEM_ERROR = new Response(-1, "系统错误");
+    public static final Response DELETE_FAIL = new Response(1, "删除失败");
+    public static final Response SYSTEM_ERROR = new Response(500, "系统错误");
 
     @ApiModelProperty(value = "响应代码")
     private int code;

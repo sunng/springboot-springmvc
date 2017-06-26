@@ -1,8 +1,7 @@
 package self.sunng.springboot.springmvc.common.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Validate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
@@ -15,12 +14,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+@Slf4j
 public class RedisClusterClient {
-    private static final Logger LOGGER = LogManager.getLogger();
 
-    private static JedisCluster cluster = null;
-    private static int retryTimes = 3;
+    private static JedisCluster JEDIS_CLUSTER = null;
+    private static final int RETRY_TIMES = 3;
 
     static {
     	init(null, CommonUtil.getProperty("redis.cluster.nodes"));
@@ -31,7 +29,7 @@ public class RedisClusterClient {
             config = defaultConfig();
         }
         Set<HostAndPort> jedisClusterNodeSet = covert2redisClusterNodeSet(redisClusterNodes);
-        cluster = new JedisCluster(jedisClusterNodeSet, config);
+        JEDIS_CLUSTER = new JedisCluster(jedisClusterNodeSet, config);
 
     }
 
@@ -104,22 +102,22 @@ public class RedisClusterClient {
 
     public static void close() {
         try {
-            cluster.close();
-            LOGGER.debug("cluster has be closed .");
+            JEDIS_CLUSTER.close();
+            log.debug("JEDIS_CLUSTER has be closed .");
         } catch (IOException e) {
-            LOGGER.debug("closed cluster exception.", e);
+            log.debug("closed JEDIS_CLUSTER exception.", e);
         }
     }
 
 
     public static String set(String key, String value) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.set(key, value);
+                return JEDIS_CLUSTER.set(key, value);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("set fail: [{}:{}] .", key, value);
+                log.error("set fail: [{}:{}] .", key, value);
             }
         }
         return null;
@@ -127,13 +125,13 @@ public class RedisClusterClient {
 
 
     public static String get(String key) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.get(key);
+                return JEDIS_CLUSTER.get(key);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("GET [{}] fail.", key);
+                log.error("GET [{}] fail.", key);
 
             }
         }
@@ -142,13 +140,13 @@ public class RedisClusterClient {
 
 
     public static Boolean exists(String key) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.exists(key);
+                return JEDIS_CLUSTER.exists(key);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("exists [{}] fail.", key);
+                log.error("exists [{}] fail.", key);
 
             }
         }
@@ -157,13 +155,13 @@ public class RedisClusterClient {
 
 
     public static String type(String key) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.type(key);
+                return JEDIS_CLUSTER.type(key);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("type [{}] fail.", key);
+                log.error("type [{}] fail.", key);
 
             }
         }
@@ -173,13 +171,13 @@ public class RedisClusterClient {
 
 
     public static Long expire(String key, int seconds) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.expire(key, seconds);
+                return JEDIS_CLUSTER.expire(key, seconds);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("expire [{}:{}] fail.", key, seconds);
+                log.error("expire [{}:{}] fail.", key, seconds);
 
             }
         }
@@ -188,13 +186,13 @@ public class RedisClusterClient {
 
 
     public static Long expireAt(String key, long unixTime) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.expireAt(key, unixTime);
+                return JEDIS_CLUSTER.expireAt(key, unixTime);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("expireAt [{}][{}] fail.", key, unixTime);
+                log.error("expireAt [{}][{}] fail.", key, unixTime);
 
             }
         }
@@ -202,13 +200,13 @@ public class RedisClusterClient {
     }
 
     public static Long del(String key) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.del(key);
+                return JEDIS_CLUSTER.del(key);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("del [{}] fail.", key);
+                log.error("del [{}] fail.", key);
 
             }
         }
@@ -216,13 +214,13 @@ public class RedisClusterClient {
     }
     
     public static Long rpush(String key, String... string) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.rpush(key, string);
+                return JEDIS_CLUSTER.rpush(key, string);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("rpush [{}:{}] fail.", key, StringUtils.arrayToCommaDelimitedString(string));
+                log.error("rpush [{}:{}] fail.", key, StringUtils.arrayToCommaDelimitedString(string));
 
             }
         }
@@ -230,13 +228,13 @@ public class RedisClusterClient {
     }
     
     public static List<String> lrange(String key, long start, long end) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.lrange(key, start, end);
+                return JEDIS_CLUSTER.lrange(key, start, end);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("lrange [{}][{}->{}] fail.", key, start, end);
+                log.error("lrange [{}][{}->{}] fail.", key, start, end);
 
             }
         }
@@ -244,13 +242,13 @@ public class RedisClusterClient {
     }
     
     public static Long llen(String key) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.llen(key);
+                return JEDIS_CLUSTER.llen(key);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("llen [{}] fail.", key);
+                log.error("llen [{}] fail.", key);
 
             }
         }
@@ -258,13 +256,13 @@ public class RedisClusterClient {
     }
     
     public static String lpop(String key) {
-        for (int i = 0; i < retryTimes; i++) {
+        for (int i = 0; i < RETRY_TIMES; i++) {
             try {
-                return cluster.lpop(key);
+                return JEDIS_CLUSTER.lpop(key);
             } catch (JedisConnectionException e) {
-                LOGGER.error("", e);
+                log.error("", e);
             } catch (Exception e) {
-                LOGGER.error("lpop [{}] fail.", key);
+                log.error("lpop [{}] fail.", key);
 
             }
         }

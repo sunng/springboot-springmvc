@@ -2,15 +2,16 @@ package self.sunng.springboot.springmvc.dao;
 
 import org.springframework.stereotype.Repository;
 import self.sunng.springboot.springmvc.common.BaseDao;
+import self.sunng.springboot.springmvc.common.Paging;
+import self.sunng.springboot.springmvc.dto.UserQueryParams;
 import self.sunng.springboot.springmvc.ent.User;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sunxiaodong on 16/7/27.
  */
-@Repository("userDao")
+@Repository
 public class UserDao extends BaseDao {
     public void insert(User user) {
         sqlSessionWriter.insert("User.insert", user);
@@ -20,21 +21,13 @@ public class UserDao extends BaseDao {
         sqlSessionWriter.update("User.updateById", user);
     }
 
-    public void deleteById(Long id) {
-        sqlSessionWriter.delete("User.deleteById", id);
-    }
-
     public User selectById(Long id) {
         return sqlSessionReader.selectOne("User.selectById", id);
     }
 
-    public List<User> selectForPage(Map<String, Object> paramMap, int pageNum) {
-        paramMap.put("pageSize", DEFAULT_PAGE_SIZE);
-        paramMap.put("startIndex", getStartIndex(pageNum, DEFAULT_PAGE_SIZE));
-        List<User> list = sqlSessionReader.selectList("User.selectForPage", paramMap);
-        //is return total count
-//        int totalCount = sqlSessionReader.selectOne("User.selectForPageTotalCount", paramMap);
-//        return new Page<>(pageNum, DEFAULT_PAGE_SIZE, totalCount, list);
-        return list;
+    public Paging batchQuery(UserQueryParams userQueryParams) {
+        List<User> users = sqlSessionReader.selectList("User.batchQuery", userQueryParams);
+        int totalCount = sqlSessionReader.selectOne("User.queryCount", userQueryParams);
+        return new Paging(userQueryParams.getPageIndex(), userQueryParams.getPageSize(), totalCount, users);
     }
 }

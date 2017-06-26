@@ -1,19 +1,22 @@
 package self.sunng.springboot.springmvc.common.interceptor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import self.sunng.springboot.springmvc.common.Constant;
 import self.sunng.springboot.springmvc.common.TokenManager;
-import self.sunng.springboot.springmvc.common.annotation.Authorization;
+import self.sunng.springboot.springmvc.common.annotations.Authorization;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 @Component
+@Slf4j
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
+    @SuppressWarnings("Duplicates")
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
         //如果不是映射到方法直接通过
